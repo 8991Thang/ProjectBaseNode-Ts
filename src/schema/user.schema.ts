@@ -18,3 +18,15 @@ export const createUserSchema = object({
             .email("Must be a valid email address")
     })
 })
+
+export const loginUserSchema = object({
+    body: object({
+        password: string()
+            .required("Password is required")
+            .min(6, "Password is too short - should be 6 characters")
+            .matches(/^[a-zA-Z0-9_.-]*$/, "Password can only contain Latin letters."),
+        email: string()
+            .required("Email is required")
+            .email("Must be a valid email address")
+    })
+})

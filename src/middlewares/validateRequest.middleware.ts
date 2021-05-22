@@ -12,7 +12,7 @@ const validateMiddleware = (schema: AnySchema) => async (req: Request, res: Resp
         })
         return next()
     } catch (error) {
-        log.error(error)
+        log.error(error, "validate middleware")
         return res.status(StatusCodes.BAD_REQUEST).json({ error: error.message })
     }
 }

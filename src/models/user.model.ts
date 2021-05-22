@@ -27,7 +27,7 @@ const UserSchema = new Schema({
     }
 }, { timestamps: true })
 
-// pre saved
+// pre saved.
 UserSchema.pre("save", async function (next: HookNextFunction) {
     let user = this as UserDocument;
     if (!user.isModified("password")) return next();

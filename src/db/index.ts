@@ -3,7 +3,7 @@ import config from "config"
 import logger from "@src/logger";
 
 
-const dbConnect = () => {
+const dbConnect = async (): Promise<void> => {
     const dbUrl = config.get("dbUrl") as string;
     return mongoose.connect(dbUrl, {
         useUnifiedTopology: true,

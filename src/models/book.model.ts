@@ -3,19 +3,22 @@ import { Schema, Document, model } from "mongoose";
 import { UserDocument } from "./user.model";
 
 export interface BookDocument extends Document {
-    user: UserDocument["_id"],
-    discription: string,
+    author: UserDocument["_id"],
+    description: string,
     typeOfBook: string
     auth: string,
     updateAt: Date,
-    createdAt: Date
+    createdAt: Date,
+    name: string,
+    likes: [UserDocument["_id"]]
 }
 
 const BookSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: "User" },
-    discription: { type: String, required: true },
-    typeOfBook: { type: String, default: "any" },
-    author: { type: String },
+    author: { type: Schema.Types.ObjectId, ref: "User" },
+    description: { type: String, required: true },
+    typeOfBook: { type: String, required: true },
+    likes: { type: [Schema.Types.ObjectId], ref: "User" },
+    name: { type: String, required: true }
 }, { timestamps: true })
 
 

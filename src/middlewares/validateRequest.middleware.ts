@@ -16,5 +16,4 @@ const validateMiddleware = (schema: AnySchema) => async (req: Request, res: Resp
         return res.status(StatusCodes.BAD_REQUEST).json({ error: error.message })
     }
 }
-
 export default validateMiddleware

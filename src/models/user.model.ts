@@ -23,7 +23,11 @@ const UserSchema = new Schema({
     password: {
         type: "string",
         require: true,
-    }
+    },
+    age: { type: Number, min: 16, max: 70, default: null },
+    address: { type: String, default: null },
+    hobby: { type: [String], default: null }
+
 }, { timestamps: true })
 
 // pre saved.
@@ -35,7 +39,6 @@ UserSchema.pre("save", async function (next: HookNextFunction) {
     user.password = hash;
     return next();
 });
-// UserSchema.plugin(uniqueValidator, { message: 'Error, expected {VALUE} to be unique.' });
 //User login
 UserSchema.methods.comparePassword = async function (password: string) {
     const user = this as UserDocument

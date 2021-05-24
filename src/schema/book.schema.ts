@@ -1,5 +1,6 @@
 import { BookTypes } from "@src/types/book.type";
-import { object, string } from "yup";
+import { isValidObjectId } from "mongoose";
+import { mixed, object, string } from "yup";
 
 export const createBookSchema = object({
     body: object({
@@ -36,6 +37,11 @@ export const updateBookSchema = object({
 
 export const pramsBookSchema = object({
     params: object({
-        id: string().uuid("IdBook of the book must be a uuid")
+        id: mixed().test({
+            message: "IdBook of the book must be a uuid",
+            test: (value) => {
+             return isValidObjectId(value)
+            },
+          }).required("ID of the book is required")
     })
 })

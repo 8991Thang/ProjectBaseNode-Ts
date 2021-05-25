@@ -5,3 +5,13 @@ export interface IUser {
     age: number;
     address: string;
 }
+
+export interface IToken {
+    accessToken: string;
+    refreshToken: string;
+}
+
+export interface IDecodeTokenUser{
+    _id: string;
+    email: string;
+}

@@ -1,7 +1,7 @@
 import { BookTypes } from "@src/types/book.type";
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, PaginateModel } from "mongoose";
 import { UserDocument } from "./user.model";
-
+import mongoosePaginate from "mongoose-paginate-v2"
 export interface BookDocument extends Document {
   author: UserDocument["_id"];
   description: string;
@@ -22,4 +22,7 @@ const BookSchema = new Schema(
   },
   { timestamps: true },
 );
-export const Book = model<BookDocument>("Book", BookSchema);
+
+BookSchema.plugin(mongoosePaginate);
+interface BookModel<T extends Document> extends PaginateModel<T> {}
+export const Book = model<BookDocument>("Book", BookSchema) as BookModel<BookDocument>

@@ -1,11 +1,11 @@
-import { decodeToken, signToken } from '@src/utils/jwt.utils';
+import { signToken, verifyToken } from '@src/utils/jwt.utils';
 import { StatusCodes } from 'http-status-codes';
 import config from "config";
 import User, { UserDocument } from "@src/models/user.model"
 import { DocumentDefinition } from "mongoose"
 import _ from 'lodash';
 import ErrorHandler, { handleResponse } from '@src/utils/response.utils';
-import { IUser } from '@src/types/user.type';
+import { IDecodeTokenUser, IToken } from '@src/types/user.type';
 
 export const createUserService = async (_user: DocumentDefinition<UserDocument>) => {
     try {
@@ -42,26 +42,46 @@ export const loginUserService = async (_user: DocumentDefinition<UserDocument>) 
 
 export const getInfoUserService = async (_userId: string) => {
     try {
-        const user = await User.findById({ _id: _userId }, "-password -createdAt -__v -updatedAt")
+        const user = await User.findById({ _id: _userId }, "-password -createdAt -__v -updatedAt").populate("hobby")
         return handleResponse(StatusCodes.OK, "Get user information successfully", user)
+    } catch (error) {
+        throw error
+    }
+}
+
+export const updateInfoUserService = async (_userId: string, _dataUser: DocumentDefinition<UserDocument>) => {
+    try {
+        const userFound = await User.findOne({ _id: _userId })
+        if(!userFound){
+            throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, "User does not exist!!")
+        }
+        const user = await User.updateOne({ _id: _userId }, _dataUser, { new: true }).select("-password").lean()
+        return handleResponse(StatusCodes.OK, "Update user information successfully", user)
     } catch (error) {
         throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, error)
     }
 }
 
-export const updateInfoUserService = async (_userId: string, _dataUser: IUser) => {
+
+export const refreshAccessTokenService = async (_token: IToken) => {
     try {
-        const user = await User.findOneAndUpdate({ _id: _userId }, _dataUser, { new: true }).select("-password").lean()
-        return handleResponse(StatusCodes.OK, "Update user information successfully", user)
+     const {_id,email} = verifyToken(_token.refreshToken,config.get("secretKeyRefreshToken")) as IDecodeTokenUser
+     if(email && _id){
+        const user = await User.findOne({ _id,email  }).select("-password").lean()
+        if(!user){
+            throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR,"User does not exist!!")
+        }
+        const getNewAccessToken = signToken({ _id, email}, config.get("secretKeyAccessToken"), { 
+            expiresIn: config.get("expiredAccessToken")
+        })
+        const token = {
+            refreshToken : _token.refreshToken,
+            accessToken : getNewAccessToken
+        }
+        return handleResponse(StatusCodes.OK, "Get Accesstoken successfully", token)
+     }
+       
     } catch (error) {
-        throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, error)
-    }
-}
-export const updateHobbyUserService = async (_userId: string, _dataUser: IUser) => {
-    try {
-        const user = await User.updateOne({ _id: _userId }, { $addToSet: _dataUser }, { new: true }).select("-password").lean()
-        return handleResponse(StatusCodes.OK, "Update user information successfully", user)
-    } catch (error) {
-        throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, error)
+        throw error
     }
 }

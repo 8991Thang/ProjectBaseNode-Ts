@@ -1,9 +1,11 @@
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 import { Book } from "@src/models/book.model";
-import { IBook } from "@src/types/book.type";
+import { IBook, IFilterBook, IOftionQueryBook } from "@src/types/book.type";
 import ErrorHandler, { handleResponse } from "@src/utils/response.utils";
+import { DocumentDefinition } from "mongoose";
+import { BookDocument } from '@src/models/book.model';
 
-export const createBookService = async (_authorID: string, book: IBook) => {
+export const createBookService = async (_authorID: string, book: DocumentDefinition<BookDocument>) => {
     try {
     const newBook = await Book.create({ ...book, author: _authorID })
     return handleResponse(StatusCodes.CREATED, getReasonPhrase(StatusCodes.CREATED), newBook)
@@ -12,9 +14,18 @@ export const createBookService = async (_authorID: string, book: IBook) => {
     }
 }
 
-export const getTheBookService = async () => {
+export const getTheBookService = async (oftionQuery:IOftionQueryBook) => {
     try {
-        const listOfTheBook = await Book.find()
+        const typeOfTheBook = {
+            typeOfBook : oftionQuery.typeOfBook
+        }
+        const sortType = oftionQuery.typeSort === "asc" ? 1 : -1
+        const options = {
+            ...oftionQuery,
+            sort : {[oftionQuery.sort] : sortType},
+            populate: {path:"author",select:"-password -__v -updatedAt -createdAt"}
+        }
+        const listOfTheBook = await Book.paginate(oftionQuery.typeOfBook ? typeOfTheBook : {},options)
         return handleResponse(StatusCodes.OK, getReasonPhrase(StatusCodes.OK), listOfTheBook)
     } catch (error) {
         throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, error)
@@ -39,7 +50,7 @@ export const getDetailTheBookService = async ( idBook: string) => {
         throw error
     }
 }
-export const updateDetailTheBookService = async (_authorID: string, idBook: string, dataBook: IBook) => {
+export const updateDetailTheBookService = async (_authorID: string, idBook: string, dataBook: DocumentDefinition<BookDocument>) => {
     try {
         const listOfTheBook = await Book.findOneAndUpdate({ author: _authorID, _id: idBook }, dataBook, { new: true })
         return handleResponse(StatusCodes.OK, getReasonPhrase(StatusCodes.OK), listOfTheBook)
@@ -92,13 +103,20 @@ export const unsubscribeBookService = async (_idOfMemberUnLike: string, idBook: 
         throw error
     }
 }
-export const listMemberSubscribeBookService = async (idBook: string) => {
+export const listMemberSubscribeBookService = async (idBook: string,oftionQuery:IOftionQueryBook) => {
     try {
-        const bookFound = await Book.findOne({_id: idBook }).populate('subscribes', "-password -__v -createdAt -updatedAt");
-        if(!bookFound) {
-            throw new ErrorHandler(StatusCodes.BAD_GATEWAY,"The book does not exist!")
+        const queryFilter:IFilterBook = {
+            typeOfBook : oftionQuery.typeOfBook ,
         }
-        return handleResponse(StatusCodes.OK, "Get list of member liked successfully!",bookFound)
+        const sortType = oftionQuery.typeSort === "asc" ? 1 : -1
+        const options = {
+            ...oftionQuery,
+            sort : {[oftionQuery.sort] : sortType},
+            select:"subscribes",
+            populate: {path:"subscribes",select:"-password -__v -updatedAt -createdAt"}
+        }
+        const listOfTheBook = await Book.paginate( oftionQuery.typeOfBook ? queryFilter : {_id: idBook} ,options)
+        return handleResponse(StatusCodes.OK, "Get list of member liked successfully!",listOfTheBook)
     } catch (error) {
         throw error
     }

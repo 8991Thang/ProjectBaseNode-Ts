@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import { object, ref, string, array, number } from "yup";
 
 export const createUserSchema = object({
@@ -38,8 +39,20 @@ export const updateUserSchema = object({
             .max(20, "Name is too Long"),
         email: string()
             .email("Must be a valid email address"),
-        hobby: array().of(string()),
+        hobby: array().of(string().test({
+            message: "IdHobby must be a uuid",
+            test: (value) => {
+             return isValidObjectId(value)
+            },
+          })).typeError('Hobby must be a array of id hobby!'),
         admin: string(),
         age: number()
+    })
+})
+
+export const refreshTokenUserSchema = object({
+    body: object({
+        refreshToken: string()
+            .required("refreshToken is required"),
     })
 })

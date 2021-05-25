@@ -8,6 +8,9 @@ export interface UserDocument extends Document {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  hobby: string[];
+  age:number;
+  address: string;
   comparePassword(password:string): Promise<boolean>;
 }
 
@@ -28,7 +31,7 @@ const UserSchema = new Schema(
     },
     age: { type: Number, min: 16, max: 70, default: null },
     address: { type: String, default: null },
-    hobby: { type: [String], default: null },
+    hobby: { type: [Schema.Types.ObjectId], ref: "Hobby" },
   },
   { timestamps: true },
 );

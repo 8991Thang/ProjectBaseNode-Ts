@@ -1,6 +1,7 @@
 import { createBookService, deleteBookService, getDetailTheBookService, 
     getTheBookOfAuthorService, getTheBookService, subscribeBookService, 
     updateDetailTheBookService , unsubscribeBookService, listMemberSubscribeBookService} from "@src/services/book.service";
+import { IOftionQueryBook } from "@src/types/book.type";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
 
@@ -16,8 +17,8 @@ export const createNewBookController = async (req: Request, res: Response, next:
 
 export const getTheBookController = async (req: Request, res: Response) => {
     try {
-        const { _id } = res.locals.userData
-        const listOfBook = await getTheBookService()
+        const query = req.query as unknown as IOftionQueryBook
+        const listOfBook = await getTheBookService(query)
         return res.status(StatusCodes.OK).json(listOfBook)
     } catch (err) {
         res.status(err?.status).json(err)
@@ -82,7 +83,8 @@ export const unsubscribeBookController = async (req: Request, res: Response, nex
 }
 export const listMemberSubscribeBookController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const listOfBook = await listMemberSubscribeBookService(req.params.id)
+        const query = req.query as unknown as IOftionQueryBook
+        const listOfBook = await listMemberSubscribeBookService(req.params.id, query)
         return res.status(StatusCodes.OK).json(listOfBook)
     } catch (err) {
         return next(err)

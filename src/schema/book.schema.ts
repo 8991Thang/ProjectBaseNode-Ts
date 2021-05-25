@@ -1,6 +1,6 @@
-import { BookTypes } from "@src/types/book.type";
+import { BookTypes, filedsSortBook, typeSort } from "@src/types/book.type";
 import { isValidObjectId } from "mongoose";
-import { mixed, object, string } from "yup";
+import { mixed, number, object, string } from "yup";
 
 export const createBookSchema = object({
     body: object({
@@ -43,5 +43,17 @@ export const pramsBookSchema = object({
              return isValidObjectId(value)
             },
           }).required("ID of the book is required")
+    })
+})
+export const queryBookSchema = object({
+    query: object({
+        limit: number().typeError('Limit must be a number'),
+        page: number().typeError('Page must be a number'),
+        sort:  string().oneOf(filedsSortBook,
+            `Sort must be one of the following values: ${filedsSortBook.join(" , ")}`),
+        typeOfBook: string().oneOf(BookTypes,
+            `typeOfBook must be one of the following values: ${BookTypes.join(" , ")}`),
+        typeSort: string().oneOf(typeSort,
+            `Type of sort must be one of the following values: ${typeSort.join(" , ")}`),
     })
 })

@@ -2,10 +2,16 @@ import log from '@src/logger';
 import { createUserService, getInfoUserService, loginUserService, refreshAccessTokenService, updateInfoUserService } from "@src/services/user.service"
 import { NextFunction, Request, Response } from "express"
 import { StatusCodes } from "http-status-codes"
+import { getRepository } from "typeorm";
+import { User } from "@src/entity/User";
 
 export const createUserController = async (req: Request, res: Response,next: NextFunction) => {
     try {
-        const user = await createUserService(req.body)
+        const userDefault = {
+            name: "thang"
+        }
+        const resultUser = getRepository(User).create(userDefault)
+        const user = getRepository(User).save(resultUser)
         return res.status(StatusCodes.CREATED).json({ data: user })
     } catch (err) {
         return next(err)
@@ -22,7 +28,7 @@ export const loginUserHandleController = async (req: Request, res: Response,next
 }
 export const getUserController = async (req: Request, res: Response,next: NextFunction) => {
     try {
-        const user = await getInfoUserService(res.locals.userData._id)
+        const user = getRepository(User).find()
         return res.status(StatusCodes.OK).json(user)
     } catch (err) {
         return next(err)

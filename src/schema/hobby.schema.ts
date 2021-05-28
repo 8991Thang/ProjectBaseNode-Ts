@@ -1,4 +1,4 @@
-import { listHobbyType ,filedsSortHobby} from "@src/types/hobby.type";
+import { listHobbyType ,fieldsSortHobby} from "@src/types/hobby.type";
 import { number, object, string } from "yup";
 import { typeSort } from '@src/types/book.type';
 
@@ -14,8 +14,8 @@ export const queryHobbySchema = object({
     query: object({
         limit: number().typeError('Limit must be a number'),
         page: number().typeError('Page must be a number'),
-        sort:  string().oneOf(filedsSortHobby,
-            `Sort must be one of the following values: ${filedsSortHobby.join(" , ")}`),
+        sort:  string().oneOf(fieldsSortHobby,
+            `Sort must be one of the following values: ${fieldsSortHobby.join(" , ")}`),
         typeOfBook: string().oneOf(listHobbyType,
             `typeOfBook must be one of the following values: ${listHobbyType.join(" , ")}`),
         typeSort: string().oneOf(typeSort,

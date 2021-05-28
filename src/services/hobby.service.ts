@@ -3,7 +3,7 @@ import { DocumentDefinition } from "mongoose"
 import { HobbyDocument } from '@src/models/hobby.model';
 import { handleResponse } from "@src/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
-import { IOftionQueryHobby } from "@src/types/hobby.type";
+import { IOptionQueryHobby } from "@src/types/hobby.type";
 
 export const createHobbyServices = async (_dataHobby:DocumentDefinition<HobbyDocument>) => {
     try {
@@ -13,7 +13,7 @@ export const createHobbyServices = async (_dataHobby:DocumentDefinition<HobbyDoc
         throw error
     }
 }
-export const getHobbyServices = async (oftionQuery:IOftionQueryHobby) => {
+export const getHobbyServices = async (oftionQuery:IOptionQueryHobby) => {
     try {
         const typeOfHobby = {
             typeOfHobby : oftionQuery.typeOfHobby

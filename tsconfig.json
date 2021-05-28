@@ -23,6 +23,7 @@
         "src/*"
       ]
     },
+    "strictPropertyInitialization": false,
     "esModuleInterop": true, /* Enables emit interoperability between Commonnamespace objeJS and ES Modules via creation of cts for all imports. Implies 'allowSyntheticDefaultImports'. */
     /* Experimental Options */
     "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */

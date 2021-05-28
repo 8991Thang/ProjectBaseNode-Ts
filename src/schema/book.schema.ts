@@ -1,4 +1,4 @@
-import { BookTypes, filedsSortBook, typeSort } from "@src/types/book.type";
+import { BookTypes, fieldsSortBook, typeSort } from "@src/types/book.type";
 import { isValidObjectId } from "mongoose";
 import { mixed, number, object, string } from "yup";
 
@@ -49,8 +49,8 @@ export const queryBookSchema = object({
     query: object({
         limit: number().typeError('Limit must be a number'),
         page: number().typeError('Page must be a number'),
-        sort:  string().oneOf(filedsSortBook,
-            `Sort must be one of the following values: ${filedsSortBook.join(" , ")}`),
+        sort:  string().oneOf(fieldsSortBook,
+            `Sort must be one of the following values: ${fieldsSortBook.join(" , ")}`),
         typeOfBook: string().oneOf(BookTypes,
             `typeOfBook must be one of the following values: ${BookTypes.join(" , ")}`),
         typeSort: string().oneOf(typeSort,

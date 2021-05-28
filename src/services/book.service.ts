@@ -1,6 +1,6 @@
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 import { Book } from "@src/models/book.model";
-import { IBook, IFilterBook, IOftionQueryBook } from "@src/types/book.type";
+import { IBook, IFilterBook, IOptionQueryBook } from "@src/types/book.type";
 import ErrorHandler, { handleResponse } from "@src/utils/response.utils";
 import { DocumentDefinition } from "mongoose";
 import { BookDocument } from '@src/models/book.model';
@@ -14,7 +14,7 @@ export const createBookService = async (_authorID: string, book: DocumentDefinit
     }
 }
 
-export const getTheBookService = async (oftionQuery:IOftionQueryBook) => {
+export const getTheBookService = async (oftionQuery:IOptionQueryBook) => {
     try {
         const typeOfTheBook = {
             typeOfBook : oftionQuery.typeOfBook
@@ -103,7 +103,7 @@ export const unsubscribeBookService = async (_idOfMemberUnLike: string, idBook: 
         throw error
     }
 }
-export const listMemberSubscribeBookService = async (idBook: string,oftionQuery:IOftionQueryBook) => {
+export const listMemberSubscribeBookService = async (idBook: string,oftionQuery:IOptionQueryBook) => {
     try {
         const queryFilter:IFilterBook = {
             typeOfBook : oftionQuery.typeOfBook ,

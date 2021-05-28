@@ -4,7 +4,7 @@ export interface IBook {
     author: string,
     name: string,
 }
-export interface IOftionQueryBook {
+export interface IOptionQueryBook {
     limit: number,
     typeOfBook: string,
     page: number,
@@ -19,8 +19,8 @@ export interface IFilterBook {
 }
 
 
-export const BookTypes = ["Classics", "Cartoon", "Romatic", "Fantasy", "Horror", "Fairytale"];
+export const BookTypes = ["Classics", "Cartoon", "Romantic", "Fantasy", "Horror", "Fairytale"];
 
-export const filedsSortBook = ["typeOfBook","name","description","createdAt"]
+export const fieldsSortBook = ["typeOfBook","name","description","createdAt"]
 
 export const typeSort = ["asc","desc"]

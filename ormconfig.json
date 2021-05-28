@@ -2,11 +2,11 @@
 {
   "type": "mysql",
   "host": "localhost",
-  "port" : 8080,
-  "username" : "thangpham",
-  "password" : "thang123",
-  "database" : "MYSQL",
-  "entities": ["src/**/*{.entity.ts}"],
+  "port" : 3306,
+  "username" : "root",
+  "password" : "",
+  "database" : "mydb",
+  "entities": ["./src/entity/*.{ts,js}"],
   "synchronize" : true,
   "extra": { "insecureAuth": true }
 }

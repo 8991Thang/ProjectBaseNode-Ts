@@ -9,9 +9,9 @@ export interface UserDocument extends Document {
   createdAt: Date;
   updatedAt: Date;
   hobby: string[];
-  age:number;
+  age: number;
   address: string;
-  comparePassword(password:string): Promise<boolean>;
+  comparePassword(password: string): Promise<boolean>;
 }
 
 const UserSchema = new Schema(
@@ -48,7 +48,7 @@ UserSchema.pre("save", async function (next: HookNextFunction) {
 // User login
 UserSchema.methods.comparePassword = async function (password: string) {
   const user = this as UserDocument;
-  return bcrypt.compare(password, user.password).catch(e => false);
+  return bcrypt.compare(password, user.password).catch(() => false);
 };
 const User = model<UserDocument>("User", UserSchema);
 

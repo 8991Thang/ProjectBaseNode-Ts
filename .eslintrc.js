@@ -26,10 +26,12 @@ module.exports = {
         endOfLine: "auto",
       },
     ],
+    "no-unused-vars": 0,
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "import/extensions": "off",
     "import/no-unresolved": "error",
     "no-console": "off",
+    "import/prefer-default-export": "off",
     "import/order": [
       "error",
       {

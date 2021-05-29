@@ -1,9 +1,27 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { IsEmail } from "class-validator";
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class User{
-  @PrimaryGeneratedColumn("uuid")
-  id:Number;
+export default class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true, nullable: false })
+  @IsEmail()
+  email: string;
+
+  @Column({ nullable: false })
+  name: string;
+
+  @Column({ nullable: false })
+  password: string;
+
   @Column()
-  name :string
+  age: number;
+
+  @Column()
+  address: string;
+
+  @Column("simple-array")
+  hobby: string[];
 }

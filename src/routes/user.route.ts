@@ -8,6 +8,7 @@ const userRouter = Router();
 //   .get(getUserController)
 //   .patch(checkTokenMiddleware, validateMiddleware(updateUserSchema), updateInfoUserController);
 userRouter.route("/auth/register").post(createUserController);
+
 // userRouter.route("/auth/register").post(validateMiddleware(createUserSchema), createUserController);
 
 // userRouter.route("/auth/login").post(validateMiddleware(loginUserSchema), loginUserHandleController);

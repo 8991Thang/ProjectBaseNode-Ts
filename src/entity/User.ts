@@ -3,7 +3,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export default class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: number;
 
   @Column({ unique: true, nullable: false })
@@ -16,10 +16,10 @@ export default class User {
   @Column({ nullable: false })
   password: string;
 
-  @Column()
+  @Column({ default: null, nullable: true })
   age: number;
 
-  @Column()
+  @Column({ default: null, nullable: true })
   address: string;
 
   @Column("simple-array")

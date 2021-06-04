@@ -2,10 +2,13 @@
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 import { DocumentDefinition } from "mongoose";
 import { Book, BookDocument } from "@src/models/book.model";
-import { IBook, IFilterBook, IOftionQueryBook } from "@src/types/book.type";
+import { IBook, IFilterBook, IOptionQueryBook } from "@src/types/book.type";
 import ErrorHandler, { handleResponse } from "@src/utils/response.utils";
 
-export const createBookService = async (_authorID: string, book: DocumentDefinition<BookDocument>) => {
+export const createBookService = async (
+  _authorID: string,
+  book: DocumentDefinition<BookDocument>,
+) => {
   try {
     const newBook = await Book.create({ ...book, author: _authorID });
     return handleResponse(StatusCodes.CREATED, getReasonPhrase(StatusCodes.CREATED), newBook);
@@ -14,7 +17,7 @@ export const createBookService = async (_authorID: string, book: DocumentDefinit
   }
 };
 
-export const getTheBookService = async (oftionQuery: IOftionQueryBook) => {
+export const getTheBookService = async (oftionQuery: IOptionQueryBook) => {
   try {
     const typeOfTheBook = {
       typeOfBook: oftionQuery.typeOfBook,
@@ -56,7 +59,11 @@ export const updateDetailTheBookService = async (
   dataBook: DocumentDefinition<BookDocument>,
 ) => {
   try {
-    const listOfTheBook = await Book.findOneAndUpdate({ author: _authorID, _id: idBook }, dataBook, { new: true });
+    const listOfTheBook = await Book.findOneAndUpdate(
+      { author: _authorID, _id: idBook },
+      dataBook,
+      { new: true },
+    );
     return handleResponse(StatusCodes.OK, getReasonPhrase(StatusCodes.OK), listOfTheBook);
   } catch (error) {
     throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, error);
@@ -74,12 +81,15 @@ export const subscribeBookService = async (_idOfMemberLike: string, idBook: stri
   try {
     const bookFound = await Book.findOne({ _id: idBook }).lean();
     if (_idOfMemberLike === bookFound?.author.toString()) {
-      throw new ErrorHandler(StatusCodes.BAD_GATEWAY, "Authors can't subscribed of their own books");
+      throw new ErrorHandler(
+        StatusCodes.BAD_GATEWAY,
+        "Authors can't subscribed of their own books",
+      );
     }
     if (!bookFound) {
       throw new ErrorHandler(StatusCodes.BAD_GATEWAY, "The book does not exist!");
     }
-    const listIdMemberSubscribe = bookFound.subscribes.map(_id => _id.toString());
+    const listIdMemberSubscribe = bookFound.subscribes.map((_id) => _id.toString());
     if (listIdMemberSubscribe.includes(_idOfMemberLike)) {
       throw new ErrorHandler(StatusCodes.BAD_GATEWAY, "The member subscribed this book!");
     }
@@ -96,18 +106,21 @@ export const unsubscribeBookService = async (_idOfMemberUnLike: string, idBook: 
     if (!bookFound) {
       throw new ErrorHandler(StatusCodes.BAD_GATEWAY, "The book does not exist!");
     }
-    const listIdMemberSubscribe = bookFound.subscribes.map(_id => _id.toString());
+    const listIdMemberSubscribe = bookFound.subscribes.map((_id) => _id.toString());
     if (!listIdMemberSubscribe.includes(_idOfMemberUnLike)) {
       throw new ErrorHandler(StatusCodes.BAD_GATEWAY, "The member has not subscribed this book!");
     }
-    const newListIdMemberUnlike = listIdMemberSubscribe.filter(id => id !== _idOfMemberUnLike);
+    const newListIdMemberUnlike = listIdMemberSubscribe.filter((id) => id !== _idOfMemberUnLike);
     await Book.updateOne({ _id: idBook }, { $set: { subscribes: newListIdMemberUnlike } });
     return handleResponse(StatusCodes.OK, "Unsubscribe successfully!");
   } catch (error) {
     throw error;
   }
 };
-export const listMemberSubscribeBookService = async (idBook: string, oftionQuery: IOftionQueryBook) => {
+export const listMemberSubscribeBookService = async (
+  idBook: string,
+  oftionQuery: IOptionQueryBook,
+) => {
   try {
     const queryFilter: IFilterBook = {
       typeOfBook: oftionQuery.typeOfBook,
@@ -119,7 +132,10 @@ export const listMemberSubscribeBookService = async (idBook: string, oftionQuery
       select: "subscribes",
       populate: { path: "subscribes", select: "-password -__v -updatedAt -createdAt" },
     };
-    const listOfTheBook = await Book.paginate(oftionQuery.typeOfBook ? queryFilter : { _id: idBook }, options);
+    const listOfTheBook = await Book.paginate(
+      oftionQuery.typeOfBook ? queryFilter : { _id: idBook },
+      options,
+    );
     return handleResponse(StatusCodes.OK, "Get list of member liked successfully!", listOfTheBook);
   } catch (error) {
     throw error;

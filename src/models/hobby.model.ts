@@ -1,18 +1,22 @@
+import { model, Schema, Document, PaginateModel } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 import { listHobbyType } from "@src/types/hobby.type";
-import { model, Schema,Document, PaginateModel } from "mongoose";
-import mongoosePaginate from "mongoose-paginate-v2"
-export interface HobbyDocument extends Document{
-        name: string;
+
+export interface HobbyDocument extends Document {
+  name: string;
 }
-const HobbySchema = new Schema({
-    name: {type:String, required:true},
-    typeOfHobby: {type:String, required:true, enum: listHobbyType}
-},{timestamps:true})
+const HobbySchema = new Schema(
+  {
+    name: { type: String, required: true },
+    typeOfHobby: { type: String, required: true, enum: listHobbyType },
+  },
+  { timestamps: true },
+);
 
-HobbySchema.plugin(mongoosePaginate)
+HobbySchema.plugin(mongoosePaginate);
 
-interface HobbyModel<T extends Document> extends PaginateModel<T> {}
+type HobbyModel<T extends Document> = PaginateModel<T>;
 
-const Hobby = model<HobbyDocument>("Hobby",HobbySchema) as HobbyModel<HobbyDocument>
+const Hobby = model<HobbyDocument>("Hobby", HobbySchema) as HobbyModel<HobbyDocument>;
 
-export default Hobby
+export default Hobby;

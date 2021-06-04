@@ -8,17 +8,15 @@ const dbConnect = async (): Promise<void> => {
     port: 3306,
     username: "root",
     password: "",
-    database: "test",
+    database: "book",
     entities: ["./src/entity/*.{ts,js}"],
     synchronize: true,
-    extra: {
-      insecureAuth: true,
-    },
+    extra: { insecureAuth: true },
   })
     .then(() => {
       logger.info("DB Connected");
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(err, "err connect db");
     });
 };

@@ -9,17 +9,6 @@ import { signToken, verifyToken } from "@src/utils/jwt.utils";
 import { IDecodeTokenUser, IToken, IUser } from "@src/types/user.type";
 import User from "@src/entity/User";
 
-export const createUserService = async (_user: any): Promise<IResponse<IUser>> => {
-  try {
-    const resultUser = getRepository(User).create(_user);
-    const user = await getRepository(User).save(resultUser);
-    console.log(user, "user");
-    return handleResponse(StatusCodes.CREATED, "Register User Successfully!", _.omit(user, "password"));
-  } catch (error) {
-    throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, error);
-  }
-};
-
 // export const loginUserService = async (_user: DocumentDefinition<UserDocument>) => {
 //   try {
 //     const user = await User.findOne({ email: _user.email });
@@ -75,8 +64,7 @@ export const createUserService = async (_user: any): Promise<IResponse<IUser>> =
 //       }
 //       const getNewAccessToken = signToken({ _id, email }, config.get("secretKeyAccessToken"), {
 //         expiresIn: config.get("expiredAccessToken"),
-//       });
-//       const token = {
+//       }); //       const token = {
 //         refreshToken: _token.refreshToken,
 //         accessToken: getNewAccessToken,
 //       };
@@ -86,3 +74,18 @@ export const createUserService = async (_user: any): Promise<IResponse<IUser>> =
 //     throw error;
 //   }
 // };
+
+export const createUserService = async (_user: any): Promise<IResponse<IUser>> => {
+  try {
+    const resultUser = getRepository(User).create(_user);
+    const user = await getRepository(User).save(resultUser);
+    console.log(user, "user");
+    return handleResponse(
+      StatusCodes.CREATED,
+      "Register User Successfully!",
+      _.omit(user, "password"),
+    );
+  } catch (error) {
+    throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, error);
+  }
+};

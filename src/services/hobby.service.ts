@@ -1,31 +1,24 @@
-import Hobby from "@src/models/hobby.model"
-import { DocumentDefinition } from "mongoose"
-import { HobbyDocument } from '@src/models/hobby.model';
-import { handleResponse } from "@src/utils/response.utils";
+/* eslint-disable no-useless-catch */
 import { StatusCodes } from "http-status-codes";
+import { getRepository } from "typeorm";
+import { handleResponse } from "@src/utils/response.utils";
 import { IOptionQueryHobby } from "@src/types/hobby.type";
+import HobbyEntity from "../entity/Hobby";
 
-export const createHobbyServices = async (_dataHobby:DocumentDefinition<HobbyDocument>) => {
-    try {
-        await Hobby.create(_dataHobby);
-        return handleResponse(StatusCodes.CREATED,"Create hobby successfully!!")
-    } catch (error) {
-        throw error
-    }
-}
-export const getHobbyServices = async (oftionQuery:IOptionQueryHobby) => {
-    try {
-        const typeOfHobby = {
-            typeOfHobby : oftionQuery.typeOfHobby
-        }
-        const sortType = oftionQuery.typeSort === "asc" ? 1 : -1
-        const options = {
-            ...oftionQuery,
-            sort : {[oftionQuery.sort] : sortType},
-        }
-       const hobbyList = await Hobby.paginate(oftionQuery.typeOfHobby ? typeOfHobby : {},options);
-        return handleResponse(StatusCodes.OK,"Get hobby successfully!!",hobbyList)
-    } catch (error) {
-        throw error
-    }
-}
+export const createHobbyServices = async (_dataHobby: any) => {
+  try {
+    const hobby = getRepository(HobbyEntity).create(_dataHobby);
+    const newHobby = await getRepository(HobbyEntity).save(hobby);
+    return handleResponse(StatusCodes.CREATED, "Create hobby successfully!!", newHobby);
+  } catch (error) {
+    throw error;
+  }
+};
+export const getHobbyServices = async (oftionQuery: IOptionQueryHobby) => {
+  try {
+    const hobby = await getRepository(HobbyEntity).findOne();
+    return handleResponse(StatusCodes.OK, "Get hobby successfully!!", hobby);
+  } catch (error) {
+    throw error;
+  }
+};

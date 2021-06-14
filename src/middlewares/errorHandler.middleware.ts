@@ -7,7 +7,7 @@ import ErrorHandler from "@src/utils/response.utils";
 export default (error: ErrorHandler | any, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof ErrorHandler) {
     logger.error(error, "errorHandler middleware ErrorHandler");
-    return res.status(error.satus).json({ message: error.message });
+    return res.status(error.status).json({ message: error.message });
   }
   if (error instanceof QueryFailedError) {
     logger.error(error, "errorHandler middleware QueryFailedError");

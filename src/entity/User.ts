@@ -1,8 +1,21 @@
+/* eslint-disable import/no-cycle */
+import * as bcrypt from "bcrypt";
 import { IsEmail } from "class-validator";
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import config from "config";
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { SharePropEntity } from "@src/utils/sharePropEntity.utils";
+import HobbyEntity from "./Hobby";
 
-@Entity()
-export default class User {
+@Entity({ name: "user" })
+export default class UserEntity extends SharePropEntity {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
@@ -22,6 +35,20 @@ export default class User {
   @Column({ default: null, nullable: true })
   address: string;
 
-  @Column("simple-array")
-  hobby: string[];
+  @OneToMany("HobbyEntity", (hobby: HobbyEntity) => hobby.id, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  hobbys: Array<HobbyEntity>;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async beforeInsert(): Promise<void> {
+    const salt = await bcrypt.genSalt(config.get("saltWordLength"));
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+
+  comparePassword(password: string): Promise<boolean> {
+    return bcrypt.compare(this.password, password);
+  }
 }

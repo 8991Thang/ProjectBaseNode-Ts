@@ -5,6 +5,7 @@ export interface IUser {
   hobby?: [string];
   age?: number;
   address?: string;
+  password: string;
 }
 
 export interface IToken {
@@ -13,6 +14,6 @@ export interface IToken {
 }
 
 export interface IDecodeTokenUser {
-  _id: string;
+  id: string;
   email: string;
 }

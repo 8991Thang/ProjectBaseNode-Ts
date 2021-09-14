@@ -21,7 +21,7 @@ export const getHobbyServices = async (oftionQuery:IOftionQueryHobby) => {
         const sortType = oftionQuery.typeSort === "asc" ? 1 : -1
         const options = {
             ...oftionQuery,
-            sort : {[oftionQuery.sort] : sortType},
+      sort: { [oftionQuery.sort]: sortType },
         }
        const hobbyList = await Hobby.paginate(oftionQuery.typeOfHobby ? typeOfHobby : {},options);
         return handleResponse(StatusCodes.OK,"Get hobby successfully!!",hobbyList)

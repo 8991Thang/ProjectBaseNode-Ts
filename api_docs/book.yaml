@@ -1,0 +1,66 @@
+paths:
+  /api/books:
+    post:
+      tags:
+        - Books
+      summary: Book
+      produces:
+        - application/json
+      responses:
+        200:
+          description: An object with token and basic info
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/refreshToken'
+        404:
+          description: Account not exists
+  /api/books/{id}:
+    post: # endpoint request type (put request)
+      tags:
+        - Books
+      summary: Create a new account
+      produces:
+        - application/json
+      requestBody:
+        description: Register account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/registerAuth'
+      responses:
+        200:
+          description: An object with the data new account
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/registerAuth'
+        401:
+          description: Unauthorized users
+definitions: # Schema definition for the request body
+  loginAuth:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  refreshToken:
+    type: object
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+  registerAuth:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      passwordConfirmation:
+        type: string
+      name:
+        type: string

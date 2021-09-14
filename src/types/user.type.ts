@@ -1,17 +1,17 @@
 export interface IUser {
-    name: string;
-    email: string;
-    hobby: [String];
-    age: number;
-    address: string;
+  name: string;
+  email: string;
+  hobby: string[];
+  age: number;
+  address: string;
 }
 
 export interface IToken {
-    accessToken: string;
-    refreshToken: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
-export interface IDecodeTokenUser{
-    _id: string;
-    email: string;
+export interface IDecodeTokenUser {
+  _id: string;
+  email: string;
 }

@@ -1,0 +1,108 @@
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      produces:
+        - application/json
+      requestBody:
+        description: Login account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/loginAuth'
+      responses:
+        200:
+          description: An object with token and basic info
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/refreshToken'
+        404:
+          description: Account not exists
+  /api/auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Create a new account
+      produces:
+        - application/json
+      requestBody:
+        description: Register account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/registerAuth'
+      responses:
+        200:
+          description: An object with the data new account
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/registerAuth'
+        401:
+          description: Unauthorized users
+  /api/auth:
+    get:
+      tags:
+        - Auth
+      summary: Get account profile
+      produces:
+        - application/json
+      responses:
+        200:
+          description: An object with account profile
+        401:
+          description: Unauthorized users
+  /api/auth/refresh-token:
+      post:
+        tags:
+          - Auth
+        summary: Get new accessToken
+        produces:
+          - application/json
+        requestBody:
+          description: Get new accessToken
+          content:
+            application/json:
+              schema:
+                properties:
+                  refreshToken:
+                    type: string
+                    description: Get the new accessToken
+                required:
+                  - refreshToken
+        responses:
+          200:
+            description: An object with account profile
+          401:
+            description: Unauthorized users
+definitions: # Schema definition for the request body
+  loginAuth:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  refreshToken:
+    type: object
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+  registerAuth:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      passwordConfirmation:
+        type: string
+      name:
+        type: string

@@ -1,8 +1,9 @@
 {
     "watch": [
-        "src"
+        "src",
+        "api_docs"
     ],
-    "ext": "ts,js,json",
+    "ext": "ts,js,json,yaml",
     "ignore": [
         "node_modules",
         "coverage",

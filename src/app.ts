@@ -2,9 +2,6 @@ import log from "@src/logger";
 import dotenv from "dotenv-safe";
 import express from "express";
 import dependencies from "@src/config/dependencies";
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUiExpress from "swagger-ui-express";
-
 import { routesConfig } from "./config/routes";
 import dbConnect from "./db";
 import errorHandler from "@src/middlewares/errorHandler.middleware";
